@@ -75,7 +75,8 @@ TARGET_arm_CFLAGS :=    -O3 \
                         -fomit-frame-pointer \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=3 \
-                        -Werror=strict-aliasing
+                        -Werror=strict-aliasing \
+                        -Wno-unused-parameter
 else
 TARGET_arm_CFLAGS :=    -Os \
                         -fomit-frame-pointer \
