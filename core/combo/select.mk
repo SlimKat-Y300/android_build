@@ -56,11 +56,17 @@ endif
 
 $(combo_target)GLOBAL_CFLAGS := -fno-exceptions -Wno-multichar
 ifeq ($(TARGET_USE_03),true)
-$(combo_target)RELEASE_CFLAGS := -O3 -fno-tree-vectorize -fno-inline-functions -fno-unswitch-loops -g -Wstrict-aliasing=3 -Werror=strict-aliasing
+$(combo_target)RELEASE_CFLAGS := -O3 -g -fno-tree-vectorize -fno-inline-functions -fno-unswitch-loops
 $(combo_target)GLOBAL_LDFLAGS :=
 else
-$(combo_target)RELEASE_CFLAGS := -Os -g -Wstrict-aliasing=3 -Werror=strict-aliasing
+$(combo_target)RELEASE_CFLAGS := -Os -g
 $(combo_target)GLOBAL_LDFLAGS :=
+endif
+
+ifeq ($(strip $(STRICT_ALIASING)),true)
+$(combo_target)RELEASE_CFLAGS += -fstrict-aliasing -Wstrict-aliasing=3 -Werror=strict-aliasing
+else
+$(combo_target)RELEASE_CFLAGS += -fno-strict-aliasing
 endif
 
 ifeq ($(strip $(OPT_MEMORY)),true)

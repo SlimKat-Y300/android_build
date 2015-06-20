@@ -81,16 +81,10 @@ TARGET_arm_CFLAGS :=    -O3 \
                         -fno-tree-vectorize \
                         -fno-inline-functions \
                         -fomit-frame-pointer \
-                        -fstrict-aliasing \
-                        -Wstrict-aliasing=3 \
-                        -Werror=strict-aliasing \
                         -Wno-unused-parameter
 else
 TARGET_arm_CFLAGS :=    -Os \
                         -fomit-frame-pointer \
-                        -fstrict-aliasing    \
-                        -Wstrict-aliasing=3 \
-                        -Werror=strict-aliasing \
                         -fno-zero-initialized-in-bss \
                         -funswitch-loops \
                         -fno-tree-vectorize \
@@ -98,6 +92,12 @@ TARGET_arm_CFLAGS :=    -Os \
                         -Wno-unused-parameter \
                         -Wno-unused-value \
                         -Wno-unused-function
+endif
+
+ifeq ($(strip $(STRICT_ALIASING)),true)
+TARGET_arm_CFLAGS +=    -fstrict-aliasing \
+                        -Wstrict-aliasing=3 \
+                        -Werror=strict-aliasing
 endif
 
 ifeq ($(strip $(OPT_MEMORY)),true)
@@ -112,9 +112,6 @@ ifeq ($(TARGET_USE_O3),true)
                             -fno-inline-functions \
                             -fno-unswitch-loops \
                             -fomit-frame-pointer \
-                            -fstrict-aliasing \
-                            -Wstrict-aliasing=3 \
-                            -Werror=strict-aliasing \
                             -Wno-unused-parameter \
                             -Wno-unused-value \
                             -Wno-unused-function
@@ -122,10 +119,13 @@ else
     TARGET_thumb_CFLAGS :=  -mthumb \
                             -Os \
                             -fomit-frame-pointer \
-                            -fstrict-aliasing \
-                            -Wstrict-aliasing=3 \
-                            -Werror=strict-aliasing \
                             -Wno-unused-parameter
+endif
+
+ifeq ($(strip $(STRICT_ALIASING)),true)
+TARGET_thumb_CFLAGS +=    -fstrict-aliasing \
+                          -Wstrict-aliasing=3 \
+                          -Werror=strict-aliasing
 endif
 
 ifeq ($(strip $(OPT_MEMORY)),true)
@@ -177,6 +177,12 @@ TARGET_GLOBAL_CFLAGS += \
 ifneq ($(filter 4.6 4.6.% 4.7 4.7.% 4.8 4.8.% 4.9 4.9.%, $(TARGET_GCC_VERSION)),)
 TARGET_GLOBAL_CFLAGS += -Wno-unused-but-set-variable -fno-builtin-sin \
 			-fno-strict-volatile-bitfields
+endif
+
+ifeq ($(strip $(STRICT_ALIASING)),true)
+TARGET_GLOBAL_CFLAGS += -fstrict-aliasing \
+                        -Wstrict-aliasing=3 \
+                        -Werror=strict-aliasing
 endif
 
 ifeq ($(strip $(OPT_MEMORY)),true)
