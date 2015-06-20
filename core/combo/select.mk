@@ -55,7 +55,7 @@ OPT_MEM += -fpredictive-commoning
 endif
 
 $(combo_target)GLOBAL_CFLAGS := -fno-exceptions -Wno-multichar
-ifeq ($(TARGET_USE_03),true)
+ifeq ($(TARGET_USE_O3),true)
 $(combo_target)RELEASE_CFLAGS := -O3 -g -fno-tree-vectorize -fno-inline-functions -fno-unswitch-loops
 $(combo_target)GLOBAL_LDFLAGS :=
 else
