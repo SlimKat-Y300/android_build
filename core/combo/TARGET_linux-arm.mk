@@ -80,16 +80,18 @@ ifeq ($(TARGET_USE_O3),true)
 TARGET_arm_CFLAGS :=    -O3 \
                         -fno-tree-vectorize \
                         -fno-inline-functions \
-                        -fomit-frame-pointer \
-                        -Wno-unused-parameter
+                        -fomit-frame-pointer
 else
 TARGET_arm_CFLAGS :=    -Os \
                         -fomit-frame-pointer \
                         -fno-zero-initialized-in-bss \
                         -funswitch-loops \
                         -fno-tree-vectorize \
-                        -funsafe-loop-optimizations \
-                        -Wno-unused-parameter \
+                        -funsafe-loop-optimizations
+endif
+
+ifeq ($(strip $(SUPPRESS_UNUSED_WARNING)),true)
+TARGET_arm_CFLAGS +=    -Wno-unused-parameter \
                         -Wno-unused-value \
                         -Wno-unused-function
 endif
@@ -111,15 +113,17 @@ ifeq ($(TARGET_USE_O3),true)
                             -fno-tree-vectorize \
                             -fno-inline-functions \
                             -fno-unswitch-loops \
-                            -fomit-frame-pointer \
-                            -Wno-unused-parameter \
-                            -Wno-unused-value \
-                            -Wno-unused-function
+                            -fomit-frame-pointer
 else
     TARGET_thumb_CFLAGS :=  -mthumb \
                             -Os \
-                            -fomit-frame-pointer \
-                            -Wno-unused-parameter
+                            -fomit-frame-pointer
+endif
+
+ifeq ($(strip $(SUPPRESS_UNUSED_WARNING)),true)
+TARGET_thumb_CFLAGS += -Wno-unused-parameter \
+                       -Wno-unused-value \
+                       -Wno-unused-function
 endif
 
 ifeq ($(strip $(STRICT_ALIASING)),true)
