@@ -46,6 +46,14 @@ $(combo_target)HAVE_STRLCPY := 0
 $(combo_target)HAVE_STRLCAT := 0
 $(combo_target)HAVE_KERNEL_MODULES := 0
 
+# Highly experimental, use with extreme caution.
+# -fgcse-las & -fpredictive-commoning = memory optimization flags, does not increase code size. gcse-las is not envoked by any -*O flags.
+# -fpredictive-commoning is enabled by default when using -O3. So if using -O3 there's no need to pass it twice.
+OPT_MEM := -fgcse-las
+ifneq ($(TARGET_USE_O3),true)
+OPT_MEM += -fpredictive-commoning
+endif
+
 $(combo_target)GLOBAL_CFLAGS := -fno-exceptions -Wno-multichar
 ifeq ($(TARGET_USE_03),true)
 $(combo_target)RELEASE_CFLAGS := -O3 -fno-tree-vectorize -fno-inline-functions -fno-unswitch-loops -g -Wstrict-aliasing=3 -Werror=strict-aliasing
@@ -54,6 +62,11 @@ else
 $(combo_target)RELEASE_CFLAGS := -Os -g -Wstrict-aliasing=3 -Werror=strict-aliasing
 $(combo_target)GLOBAL_LDFLAGS :=
 endif
+
+ifeq ($(strip $(OPT_MEMORY)),true)
+$(combo_target)RELEASE_CFLAGS += $(OPT_MEM)
+endif
+
 $(combo_target)GLOBAL_ARFLAGS := crsP
 
 $(combo_target)EXECUTABLE_SUFFIX :=

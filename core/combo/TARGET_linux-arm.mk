@@ -40,6 +40,14 @@ else
 TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
 endif
 
+# Highly experimental, use with extreme caution.
+# -fgcse-las & -fpredictive-commoning = memory optimization flags, does not increase code size. gcse-las is not envoked by any -*O flags.
+# -fpredictive-commoning is enabled by default when using -O3. So if using -O3 there's no need to pass it twice.
+OPT_MEM := -fgcse-las
+ifneq ($(TARGET_USE_O3),true)
+OPT_MEM += -fpredictive-commoning
+endif
+
 TARGET_ARCH_SPECIFIC_MAKEFILE := $(BUILD_COMBOS)/arch/$(TARGET_ARCH)/$(TARGET_ARCH_VARIANT).mk
 ifeq ($(strip $(wildcard $(TARGET_ARCH_SPECIFIC_MAKEFILE))),)
 $(error Unknown ARM architecture version: $(TARGET_ARCH_VARIANT))
@@ -92,6 +100,10 @@ TARGET_arm_CFLAGS :=    -Os \
                         -Wno-unused-function
 endif
 
+ifeq ($(strip $(OPT_MEMORY)),true)
+TARGET_arm_CFLAGS += $(OPT_MEM)
+endif
+
 # Modules can choose to compile some source as thumb.
 ifeq ($(TARGET_USE_O3),true)
     TARGET_thumb_CFLAGS :=  -mthumb \
@@ -114,6 +126,10 @@ else
                             -Wstrict-aliasing=3 \
                             -Werror=strict-aliasing \
                             -Wno-unused-parameter
+endif
+
+ifeq ($(strip $(OPT_MEMORY)),true)
+TARGET_thumb_CFLAGS += $(OPT_MEM)
 endif
 
 # Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
@@ -163,6 +179,10 @@ TARGET_GLOBAL_CFLAGS += -Wno-unused-but-set-variable -fno-builtin-sin \
 			-fno-strict-volatile-bitfields
 endif
 
+ifeq ($(strip $(OPT_MEMORY)),true)
+TARGET_GLOBAL_CFLAGS += $(OPT_MEM)
+endif
+
 # This is to avoid the dreaded warning compiler message:
 #   note: the mangling of 'va_list' has changed in GCC 4.4
 #
@@ -194,6 +214,10 @@ TARGET_RELEASE_CFLAGS := \
 			-fgcse-after-reload \
 			-frerun-cse-after-loop \
 			-frename-registers
+
+ifeq ($(strip $(OPT_MEMORY)),true)
+TARGET_RELEASE_CFLAGS += $(OPT_MEM)
+endif
 
 libc_root := bionic/libc
 libm_root := bionic/libm
