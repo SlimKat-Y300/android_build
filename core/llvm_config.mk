@@ -17,7 +17,8 @@ CLANG_CONFIG_EXTRA_CFLAGS := \
   -D__compiler_offsetof=__builtin_offsetof \
 
 CLANG_CONFIG_UNKNOWN_CFLAGS := \
-  -funswitch-loops
+  -funswitch-loops \
+  -fno-unswitch-loops
 
 ifeq ($(TARGET_ARCH),arm)
   RS_TRIPLE := armv7-none-linux-gnueabi
@@ -33,6 +34,8 @@ ifeq ($(TARGET_ARCH),arm)
     -B$(TARGET_TOOLCHAIN_ROOT)/arm-linux-androideabi/bin
   CLANG_CONFIG_UNKNOWN_CFLAGS += \
     -mthumb-interwork \
+    -fpredictive-commoning \
+    -fgcse-las \
     -fgcse-after-reload \
     -frerun-cse-after-loop \
     -frename-registers \

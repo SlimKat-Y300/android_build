@@ -93,7 +93,8 @@ endif
 ifeq ($(strip $(SUPPRESS_UNUSED_WARNING)),true)
 TARGET_arm_CFLAGS +=    -Wno-unused-parameter \
                         -Wno-unused-value \
-                        -Wno-unused-function
+                        -Wno-unused-function \
+                        -Wno-error=strict-aliasing
 endif
 
 ifeq ($(strip $(STRICT_ALIASING)),true)
@@ -123,7 +124,8 @@ endif
 ifeq ($(strip $(SUPPRESS_UNUSED_WARNING)),true)
 TARGET_thumb_CFLAGS += -Wno-unused-parameter \
                        -Wno-unused-value \
-                       -Wno-unused-function
+                       -Wno-unused-function \
+                       -Wno-error=strict-aliasing
 endif
 
 ifeq ($(strip $(STRICT_ALIASING)),true)
